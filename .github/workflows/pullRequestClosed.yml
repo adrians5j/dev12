@@ -32,18 +32,12 @@ jobs:
       PULUMI_CONFIG_PASSPHRASE: ${{ secrets.PULUMI_CONFIG_PASSPHRASE }}
       WEBINY_PULUMI_BACKEND: ${{ secrets.WEBINY_PULUMI_BACKEND }}
 
-    # We skip steps if the WEBINY_PULUMI_BACKEND environment variable is missing.
-    # This environment variable must exist because it determines where our cloud infrastructure
-    # state files will be stored.
-    # https://www.webiny.com/docs/key-topics/ci-cd/cloud-infrastructure-state-files
     steps:
       - uses: actions/setup-node@v2
         with:
           node-version: 12
-        if: secrets.WEBINY_PULUMI_BACKEND
 
       - uses: actions/checkout@v2
-        if: secrets.WEBINY_PULUMI_BACKEND
 
       # 1. Install and cache dependencies.
       - uses: actions/cache@v2
@@ -51,21 +45,16 @@ jobs:
         with:
           path: .yarn/cache
           key: yarn-${{ hashFiles('**/yarn.lock') }}
-        if: secrets.WEBINY_PULUMI_BACKEND
 
       - name: Install dependencies
         run: yarn --immutable
-        if: secrets.WEBINY_PULUMI_BACKEND
 
       # 2. Destroy short-lived environment.
       - name: Destroy API project application
         run: yarn webiny destroy api --env pr${{ github.event.pull_request.number }}
-        if: secrets.WEBINY_PULUMI_BACKEND
 
       - name: Destroy Admin Area project application
         run: yarn webiny destroy apps/admin --env pr${{ github.event.pull_request.number }}
-        if: secrets.WEBINY_PULUMI_BACKEND
 
       - name: Destroy Website project application
         run: yarn webiny destroy apps/website --env pr${{ github.event.pull_request.number }}
-        if: secrets.WEBINY_PULUMI_BACKEND
