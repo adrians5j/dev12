@@ -3,6 +3,7 @@ name: Pull Requests
 on:
   pull_request:
     branches: [dev, staging, prod]
+    types: [closed]
 
 jobs:
   # This first step ensures we don't run the workflow if the repository is empty.
