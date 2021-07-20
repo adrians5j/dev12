@@ -20,8 +20,8 @@ jobs:
         id: webiny-project-js
         run: echo "::set-output name=ready::${{ hashFiles('webiny.project.ts') != '' }}"
 
-  build-test-static-unit:
-    name: Build and run static and unit tests
+  destroy-project:
+    name: Destroy project deployed into a short-lived environment
     needs: repository-check
     runs-on: ubuntu-latest
     environment: pr
