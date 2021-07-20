@@ -77,10 +77,10 @@ jobs:
       - uses: actions/setup-node@v2
         with:
           node-version: 12
-        if: ${{ secrets.WEBINY_PULUMI_BACKEND }}
+        if: secrets.WEBINY_PULUMI_BACKEND
 
       - uses: actions/checkout@v2
-        if: ${{ secrets.WEBINY_PULUMI_BACKEND }}
+        if: secrets.WEBINY_PULUMI_BACKEND
 
       # 1. Install and cache dependencies.
       - uses: actions/cache@v2
@@ -88,31 +88,31 @@ jobs:
         with:
           path: .yarn/cache
           key: yarn-${{ hashFiles('**/yarn.lock') }}
-        if: ${{ secrets.WEBINY_PULUMI_BACKEND }}
+        if: secrets.WEBINY_PULUMI_BACKEND
 
       - name: Install dependencies
         run: yarn --immutable
-        if: ${{ secrets.WEBINY_PULUMI_BACKEND }}
+        if: secrets.WEBINY_PULUMI_BACKEND
 
       # 2. Build custom packages (all packages located within the "packages" folder).
       - name: Build packages
         run: yarn webiny workspaces run build --folder packages
-        if: ${{ secrets.WEBINY_PULUMI_BACKEND }}
+        if: secrets.WEBINY_PULUMI_BACKEND
 
       # 3. Deploy to a short-lived environment (will be destroyed once the PR is closed).
       - name: Deploy
         run: yarn webiny deploy --env pr${{ github.event.pull_request.number }}
-        if: ${{ secrets.WEBINY_PULUMI_BACKEND }}
+        if: secrets.WEBINY_PULUMI_BACKEND
 
       # 4. Run integration tests.
       - name: Run integration tests
         run: yarn test:integration
-        if: ${{ secrets.WEBINY_PULUMI_BACKEND }}
+        if: secrets.WEBINY_PULUMI_BACKEND
 
       # 5. Run end-to-end tests.
       - name: Run end-to-end tests
         run: yarn test:e2e
-        if: ${{ secrets.WEBINY_PULUMI_BACKEND }}
+        if: secrets.WEBINY_PULUMI_BACKEND
 
       # Add additional steps if needed. For example, if you have additional E2E
       # tests done with Cypress (https://www.cypress.io/), you can run them here.

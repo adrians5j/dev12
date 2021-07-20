@@ -40,10 +40,10 @@ jobs:
       - uses: actions/setup-node@v2
         with:
           node-version: 12
-        if: ${{ env.WEBINY_PULUMI_BACKEND }}
+        if: secrets.WEBINY_PULUMI_BACKEND
 
       - uses: actions/checkout@v2
-        if: ${{ env.WEBINY_PULUMI_BACKEND }}
+        if: secrets.WEBINY_PULUMI_BACKEND
 
       # 1. Install and cache dependencies.
       - uses: actions/cache@v2
@@ -51,21 +51,21 @@ jobs:
         with:
           path: .yarn/cache
           key: yarn-${{ hashFiles('**/yarn.lock') }}
-        if: ${{ env.WEBINY_PULUMI_BACKEND }}
+        if: secrets.WEBINY_PULUMI_BACKEND
 
       - name: Install dependencies
         run: yarn --immutable
-        if: ${{ env.WEBINY_PULUMI_BACKEND }}
+        if: secrets.WEBINY_PULUMI_BACKEND
 
       # 2. Destroy short-lived environment.
       - name: Destroy API project application
         run: yarn webiny destroy api --env pr${{ github.event.pull_request.number }}
-        if: ${{ env.WEBINY_PULUMI_BACKEND }}
+        if: secrets.WEBINY_PULUMI_BACKEND
 
       - name: Destroy Admin Area project application
         run: yarn webiny destroy apps/admin --env pr${{ github.event.pull_request.number }}
-        if: ${{ env.WEBINY_PULUMI_BACKEND }}
+        if: secrets.WEBINY_PULUMI_BACKEND
 
       - name: Destroy Website project application
         run: yarn webiny destroy apps/website --env pr${{ github.event.pull_request.number }}
-        if: ${{ env.WEBINY_PULUMI_BACKEND }}
+        if: secrets.WEBINY_PULUMI_BACKEND
